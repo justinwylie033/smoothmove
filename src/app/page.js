@@ -13,14 +13,14 @@ export default function HomePage() {
     e.preventDefault();
     const trimmedPostcode = postcode.trim();
     
-    // Validate that the postcode contains at least one space.
+    // Check that the postcode contains at least one space (indicating a full postcode).
     if (!trimmedPostcode.includes(" ")) {
       setError("Please enter a full postcode (e.g., 'EH11 1AA').");
       return;
     }
     
     setError("");
-    router.push(`/results?postcode=${encodeURIComponent(trimmedPostcode.toUpperCase())}`);
+    router.push(`/resulting?postcode=${encodeURIComponent(trimmedPostcode.toUpperCase())}`);
   };
 
   return (
@@ -30,7 +30,8 @@ export default function HomePage() {
           Discover Your Next Home's Neighborhood
         </h2>
         <p className="mt-4 text-lg text-gray-700">
-          Enter your postcode to receive real‑time insights on local weather, crime data, and more before you move.
+          Enter your postcode to receive real‑time insights on local weather,
+          crime data, and more before you move.
         </p>
       </div>
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">

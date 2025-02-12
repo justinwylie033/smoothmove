@@ -1,27 +1,29 @@
-// app/results/page.js
 "use client";
+
+// Disable static prerendering for this page.
+export const prerender = false;
+export const dynamic = "force-dynamic";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function ResultsPage() {
+export default function ResultingPage() {
+  // Get URL query parameters
   const searchParams = useSearchParams();
   const postcode = searchParams.get("postcode");
   const router = useRouter();
+
+  // Local state for data, loading, and error messages.
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  // Fetch data only on the client when a postcode is provided.
   useEffect(() => {
     if (!postcode) return;
-    const fetchData = async () => {
+    async function fetchData() {
       try {
-        const res = await fetch(`http://localhost:5000/api/${postcode}`);
+        const res = await fetch(`https://backend-7flt.onrender.com/api/${postcode}`);
         if (!res.ok) {
           throw new Error(`Error fetching data: ${res.statusText}`);
         }
@@ -29,15 +31,26 @@ export default function ResultsPage() {
         setData(result);
       } catch (err) {
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    };
-
+    }
     fetchData();
   }, [postcode]);
 
-  if (!mounted) {
-    return null;
+  // If no postcode is provided, display a message and a button to go back.
+  if (!postcode) {
+    return (
+      <div className="text-center p-4">
+        <p className="text-xl text-red-500">No postcode provided.</p>
+        <button
+          className="mt-4 bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition"
+          onClick={() => router.push("/")}
+        >
+          Go Back
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -59,7 +72,7 @@ export default function ResultsPage() {
               <h3 className="text-2xl font-semibold text-blue-800 border-b-2 border-blue-500 pb-2 mb-4">
                 Weather Information
               </h3>
-              {data.weather.error ? (
+              {data.weather?.error ? (
                 <p>{data.weather.error}</p>
               ) : (
                 <ul className="space-y-2">
@@ -84,7 +97,7 @@ export default function ResultsPage() {
               <h3 className="text-2xl font-semibold text-blue-800 border-b-2 border-blue-500 pb-2 mb-4">
                 Transport Police Data 2024
               </h3>
-              {data.crime.error ? (
+              {data.crime?.error ? (
                 <p>{data.crime.error}</p>
               ) : (
                 <ul className="space-y-2">
@@ -104,7 +117,7 @@ export default function ResultsPage() {
             </div>
           </div>
           {/* Detailed Crime Data Section */}
-          {data.crime && data.crime.crime_details && data.crime.crime_details.length > 0 && (
+          {data.crime?.crime_details && data.crime.crime_details.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-2xl font-semibold text-blue-800 border-b-2 border-blue-500 pb-2 mb-4">
                 Detailed Information
