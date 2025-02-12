@@ -1,3 +1,4 @@
+// app/results/ResultsClient.js
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
@@ -12,27 +13,31 @@ export default function ResultsClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fetch data when a postcode is provided.
   useEffect(() => {
+    console.log("Query parameter postcode:", postcode);
     if (!postcode) return;
+    
     async function fetchData() {
       try {
         const res = await fetch(`https://backend-7flt.onrender.com/api/${postcode}`);
+        console.log("Fetch response:", res);
         if (!res.ok) {
           throw new Error(`Error fetching data: ${res.statusText}`);
         }
         const result = await res.json();
+        console.log("Fetched data:", result);
         setData(result);
       } catch (err) {
+        console.error("Error in fetchData:", err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     }
+    
     fetchData();
   }, [postcode]);
 
-  // If no postcode is provided, display a message with a button to go back.
   if (!postcode) {
     return (
       <div className="text-center p-4">
@@ -49,10 +54,14 @@ export default function ResultsClient() {
 
   return (
     <div className="space-y-8 p-4">
-      {loading && <p className="text-center text-xl text-blue-900">Loading...</p>}
-      {error && <p className="text-center text-xl text-red-500">{error}</p>}
+      {loading && (
+        <p className="text-center text-xl text-blue-900">Loading...</p>
+      )}
+      {error && (
+        <p className="text-center text-xl text-red-500">{error}</p>
+      )}
       {data && (
-        <div className="space-y-6">
+        <>
           <h2 className="text-3xl font-bold text-center text-blue-900">
             Results for {data.postcode}
           </h2>
@@ -82,7 +91,7 @@ export default function ResultsClient() {
                 </ul>
               )}
             </div>
-            {/* Crime Data Summary Section */}
+            {/* Transport Police Data Section */}
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-2xl font-semibold text-blue-800 border-b-2 border-blue-500 pb-2 mb-4">
                 Transport Police Data 2024
@@ -110,7 +119,7 @@ export default function ResultsClient() {
           {data.crime?.crime_details && data.crime.crime_details.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-2xl font-semibold text-blue-800 border-b-2 border-blue-500 pb-2 mb-4">
-                Detailed Information
+                Detailed Crime Records
               </h3>
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {data.crime.crime_details.map((crime) => (
@@ -146,7 +155,7 @@ export default function ResultsClient() {
               Search Again
             </button>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

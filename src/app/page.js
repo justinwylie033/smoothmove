@@ -11,16 +11,11 @@ export default function HomePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const trimmedPostcode = postcode.trim();
-    
-    // Check that the postcode contains at least one space (indicating a full postcode).
-    if (!trimmedPostcode.includes(" ")) {
-      setError("Please enter a full postcode (e.g., 'EH11 1AA').");
+    if (!postcode.trim()) {
+      setError("Please enter a valid postcode.");
       return;
     }
-    
-    setError("");
-    router.push(`/resulting?postcode=${encodeURIComponent(trimmedPostcode.toUpperCase())}`);
+    router.push(`/results?postcode=${postcode.trim().toUpperCase()}`);
   };
 
   return (
@@ -30,18 +25,15 @@ export default function HomePage() {
           Discover Your Next Home's Neighborhood
         </h2>
         <p className="mt-4 text-lg text-gray-700">
-          Enter your postcode to receive real‑time insights on local weather,
-          crime data, and more before you move.
+          Enter your postcode to receive real‑time insights on local weather, crime data, and more before you move.
         </p>
       </div>
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        {error && (
-          <div className="mb-4 text-red-500 font-semibold">{error}</div>
-        )}
+        {error && <div className="mb-4 text-red-500 font-semibold">{error}</div>}
         <form onSubmit={handleSubmit} className="flex flex-col">
           <input
             type="text"
-            placeholder="Enter postcode e.g. EH11 1AA"
+            placeholder="Enter postcode e.g. EH11"
             value={postcode}
             onChange={(e) => {
               setPostcode(e.target.value);
@@ -50,10 +42,7 @@ export default function HomePage() {
             className="p-4 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
-          <button
-            type="submit"
-            className="bg-blue-600 text-white p-4 rounded hover:bg-blue-700 transition"
-          >
+          <button type="submit" className="bg-blue-600 text-white p-4 rounded hover:bg-blue-700 transition">
             Search
           </button>
         </form>

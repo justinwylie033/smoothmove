@@ -1,15 +1,10 @@
-// /app/results/page.js
-import { Suspense } from "react";
-import ResultsClient from "./ResultsClient.client";
+// app/results/page.js
 
-// Disable prerendering and force dynamic rendering.
-export const prerender = false;
+// This export forces the page to be dynamically rendered (not statically prerendered)
 export const dynamic = "force-dynamic";
 
+import ResultsClient from "./ResultsClient";
+
 export default function ResultsPage() {
-  return (
-    <Suspense fallback={<div className="text-center text-xl text-blue-900 p-4">Loading...</div>}>
-      <ResultsClient />
-    </Suspense>
-  );
+  return <ResultsClient />;
 }
