@@ -49,12 +49,8 @@ export default function ResultsClient() {
 
   return (
     <div className="space-y-8 p-4">
-      {loading && (
-        <p className="text-center text-xl text-blue-900">Loading...</p>
-      )}
-      {error && (
-        <p className="text-center text-xl text-red-500">{error}</p>
-      )}
+      {loading && <p className="text-center text-xl text-blue-900">Loading...</p>}
+      {error && <p className="text-center text-xl text-red-500">{error}</p>}
       {data && (
         <div className="space-y-6">
           <h2 className="text-3xl font-bold text-center text-blue-900">

@@ -2,7 +2,7 @@
 import { Suspense } from "react";
 import ResultsClient from "./ResultsClient.client";
 
-// Disable prerendering for this route.
+// Disable prerendering and force dynamic rendering.
 export const prerender = false;
 export const dynamic = "force-dynamic";
 
