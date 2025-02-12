@@ -1,24 +1,18 @@
 "use client";
 
-// Disable static prerendering for this page.
-export const prerender = false;
-export const dynamic = "force-dynamic";
-
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function ResultingPage() {
-  // Get URL query parameters
+export default function ResultsClient() {
   const searchParams = useSearchParams();
   const postcode = searchParams.get("postcode");
   const router = useRouter();
 
-  // Local state for data, loading, and error messages.
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Fetch data only on the client when a postcode is provided.
+  // Fetch data when a postcode is provided.
   useEffect(() => {
     if (!postcode) return;
     async function fetchData() {
@@ -38,7 +32,7 @@ export default function ResultingPage() {
     fetchData();
   }, [postcode]);
 
-  // If no postcode is provided, display a message and a button to go back.
+  // If no postcode is provided, display a message with a button to go back.
   if (!postcode) {
     return (
       <div className="text-center p-4">
@@ -54,7 +48,7 @@ export default function ResultingPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4">
       {loading && (
         <p className="text-center text-xl text-blue-900">Loading...</p>
       )}
